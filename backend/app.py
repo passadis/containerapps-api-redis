@@ -12,11 +12,10 @@ app = Flask(__name__)
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 storage_account_name = os.getenv('STORAGE_ACCOUNT_NAME')
 container_name = 'cities'
-#requirepass NWJRPMNAEKoXFVzAl1vwUjGYDSDR8E2w8sMxqN9ZSTYiX1VWwrIxqGQymaqkHB0PI9ZITH1MfIZXuU36VK0QxY7I2yaK29ozH0Wz2Kh8ZmblnnRWBnv1ULoygTw0liAOdir /mnt/dataport 6379protected-mode yesappendonly yes
-redis_client = redis.Redis(host='citieskp.redis.cache.windows.net', port=6380, password='PwzPv9YPsJCNDAzhCQvYd05P04Go8LQqXAzCaAnMFsc=', ssl=True)
+redis_client = redis.Redis(host='xxxxx.redis.cache.windows.net', port=6380, password='xxxxxxxxxxxxxx=', ssl=True)
 # Initialize OpenAI with the appropriate API key
 client = OpenAI(
-  organization='org-auCzDBnqqvQc40lcMtnwPzuK',
+  organization='xxxxxxxxxxxxxxxxx',
   api_key=OPENAI_API_KEY  # Use the environment variable here for security
 )
 
