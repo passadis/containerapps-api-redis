@@ -1,4 +1,11 @@
-# Building Containerized Applications with Azure Container Apps and OpenAI API
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=azure,py,flask,ai,html,css,redis,vscode" />
+  </a>
+</p>
+
+<h1 align="center">Building Containerized Applications with Azure Container Apps and OpenAI API</h1>
+
 
 ## Introduction
 
