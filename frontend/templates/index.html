@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Guide App</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                e.preventDefault();
+                var city = $('select[name="city"]').val();
+                $.ajax({
+                    url: '/get_city_info',
+                    type: 'POST',
+                    data: { city: city },
+                    success: function(response) {
+                        $('.description').text(response.description);
+                        $('.city-image').attr('src', response.image_url).show();
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>City Guide App</h1>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="City Logo" class="centered-image">
+        <form>
+            <select name="city">
+                <option value="Berlin">Berlin</option>
+                <option value="Athens">Athens</option>
+                <option value="Rome">Rome</option>
+                <option value="Madrid">Madrid</option>
+                <option value="London">London</option>
+                <!-- Add other cities here -->
+            </select>
+            <button type="submit">Get Info</button>
+        </form>
+        <div class="description"></div>
+        <img src="" alt="City Image" class="city-image" style="display:none;">
+    </div>
+</body>
+</html>

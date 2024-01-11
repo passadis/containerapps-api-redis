@@ -1,0 +1,25 @@
+$RESOURCE_GROUP="rg-demoapp"
+$LOCATION="westeurope"
+$ENVIRONMENT="env-web-1"
+$FRONTEND="frontend"
+$API_BACKEND="backend"
+$ACR_NAME="myrandomnameforacr"
+
+az upgrade
+az extension add --name containerapp --upgrade
+az provider register --namespace Microsoft.App
+az provider register --namespace Microsoft.OperationalInsights 
+
+
+
+az group create --name $RESOURCE_GROUP --location "$LOCATION"
+az redis create --location "$LOCATION" --name MyRedisCache --resource-group $RESOURCE_GROUP --sku Basic --vm-size c0
+az acr create --resource-group $RESOURCE_GROUP --name $ACR_NAME --sku Basic --admin-enabled true
+az containerapp env create --name $ENVIRONMENT -g $RESOURCE_GROUP --location "$LOCATION"
+
+az acr build --registry $ACR_NAME --image backend . 
+
+az containerapp create --name $API_NAME --resource-group $RESOURCE_GROUP --environment $ENVIRONMENT --image $ACR_NAME.azurecr.io/$API_NAME --target-port 5000 --env-vars STORAGE_ACCOUNT_NAME=xxxxxx OPENAI_API_KEY=sxxxx --ingress 'external' --registry-server $ACR_NAME.azurecr.io --query properties.configuration.ingress.fqdn
+
+## Get the URL of the API Endpoint:
+$API_BASE_URL=(az containerapp show --resource-group $RESOURCE_GROUP --name $API_NAME --query properties.configuration.ingress.fqdn -o tsv)
