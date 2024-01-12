@@ -36,3 +36,7 @@ This approach offers an integrated solution for enterprise-scale applications, r
 ## Contribute
 
 We encourage contributions! If you have ideas on how to improve this application or want to report a bug, please feel free to open an issue or submit a pull request.
+
+## Architecture
+
+![api-1a](https://github.com/passadis/containerapps-api-redis/assets/53148138/b4280e4a-4360-476a-b9e1-ae0f37ea23a8)
