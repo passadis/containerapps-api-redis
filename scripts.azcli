@@ -1,25 +1,42 @@
-$RESOURCE_GROUP="rg-demoapp"
-$LOCATION="westeurope"
-$ENVIRONMENT="env-web-1"
+## Create Variables
+$RESOURCE_GROUP="rg-demo29"
+$LOCATION="northeurope"
+$ENVIRONMENT="env-web-xx"
 $FRONTEND="frontend"
-$API_BACKEND="backend"
-$ACR_NAME="myrandomnameforacr"
+$BACKEND="backend"
+$ACR="xxxxxx"
+$IDENTITY="xacridentityx"
 
+## Run Extensions & Provider Registrations
 az upgrade
 az extension add --name containerapp --upgrade
 az provider register --namespace Microsoft.App
 az provider register --namespace Microsoft.OperationalInsights 
 
 
-
+## Create base Resources
 az group create --name $RESOURCE_GROUP --location "$LOCATION"
-az redis create --location "$LOCATION" --name MyRedisCache --resource-group $RESOURCE_GROUP --sku Basic --vm-size c0
-az acr create --resource-group $RESOURCE_GROUP --name $ACR_NAME --sku Basic --admin-enabled true
+az redis create --location "$LOCATION" --name redis029 --resource-group $RESOURCE_GROUP --sku Basic --vm-size c0
+az acr create --resource-group $RESOURCE_GROUP --name $ACR --sku Basic --admin-enabled true
+
+## Create Container App environment
 az containerapp env create --name $ENVIRONMENT -g $RESOURCE_GROUP --location "$LOCATION"
 
-az acr build --registry $ACR_NAME --image backend . 
+## Build and Deploy Backend Image to Container Registry 
+az acr build --registry $ACR --image backend .
 
-az containerapp create --name $API_NAME --resource-group $RESOURCE_GROUP --environment $ENVIRONMENT --image $ACR_NAME.azurecr.io/$API_NAME --target-port 5000 --env-vars STORAGE_ACCOUNT_NAME=xxxxxx OPENAI_API_KEY=sxxxx --ingress 'external' --registry-server $ACR_NAME.azurecr.io --query properties.configuration.ingress.fqdn
+## Create User Assigned Identity 
+az identity create --name $IDENTITY --resource-group $RESOURCE_GROUP
 
-## Get the URL of the API Endpoint:
-$API_BASE_URL=(az containerapp show --resource-group $RESOURCE_GROUP --name $API_NAME --query properties.configuration.ingress.fqdn -o tsv)
+$IDENTITY_ID=(az identity show --name $IDENTITY --resource-group $RESOURCE_GROUP --query id)
+
+## Create Container App Backend
+az containerapp create --user-assigned $IDENTITY_ID --registry-identity $IDENTITY_ID --name $BACKEND --resource-group $RESOURCE_GROUP --environment $ENVIRONMENT --image "$ACR.azurecr.io/backend:latest" --target-port 5000 --env-vars STORAGE_ACCOUNT_NAME=strkp009 OPENAI_API_KEY=xxxxxxxxxxxxxxxxxxx --ingress 'external' --registry-server "$ACR.azurecr.io" --query properties.configuration.ingress.fqdn
+
+$API_URL=(az containerapp show --resource-group $RESOURCE_GROUP --name $BACKEND --query properties.configuration.ingress.fqdn -o tsv)
+
+## Build and Deploy Frontend Image to Container Registry
+az acr build --registry $ACR --image frontend .
+az containerapp create --user-assigned $IDENTITY_ID --registry-identity $IDENTITY_ID --name $FRONTEND --resource-group $RESOURCE_GROUP --environment $ENVIRONMENT --image "$ACR.azurecr.io/frontend:latest"  --target-port 8000 --env-vars BACKEND_API_URL=https://$API_URL STORAGE_ACCOUNT_NAME=strkp009 --ingress 'external' --registry-server "$ACR.azurecr.io" --query properties.configuration.ingress.fqdn
+
+
