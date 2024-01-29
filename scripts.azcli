@@ -16,7 +16,7 @@ az provider register --namespace Microsoft.OperationalInsights
 
 ## Create base Resources
 az group create --name $RESOURCE_GROUP --location "$LOCATION"
-az redis create --location "$LOCATION" --name redis029 --resource-group $RESOURCE_GROUP --sku Basic --vm-size c0
+az redis create --location "$LOCATION" --name redis029 --resource-group $RESOURCE_GROUP --sku Basic --vm-size c0 // Add the details to Backend Code!
 az acr create --resource-group $RESOURCE_GROUP --name $ACR --sku Basic --admin-enabled true
 
 ## Create Container App environment
