@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">Building Containerized Applications with Azure Container Apps and OpenAI API</h1>
+<h1 align="center">Building Containerized Applications with Azure Container Apps and utilize OpenAI API</h1>
 
 
 ## Introduction
