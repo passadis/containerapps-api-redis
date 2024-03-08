@@ -56,4 +56,4 @@ def get_city_info():
     })
 
 if __name__ == '__main__':
-    app.run
+    app.run(debug.false)
