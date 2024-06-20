@@ -10,12 +10,28 @@ app = Flask(__name__)
 
 # Environment variables
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_ORG_ID = os.getenv('OPENAI_ORG_ID')
 storage_account_name = os.getenv('STORAGE_ACCOUNT_NAME')
 container_name = 'cities'
-redis_client = redis.Redis(host='xxxxx.redis.cache.windows.net', port=6380, password='xxxxxxxxxxxxxx=', ssl=True)
+
+# redis_client = redis.Redis(host='xxxxx.redis.cache.windows.net', port=6380, password='xxxxxxxxxxxxxx=', ssl=True)
+
+# Redis client setup
+redis_host = os.getenv('REDIS_HOST')  # Expected to be set in the pipeline
+redis_password = os.getenv('REDIS_PASSWORD')  # Expected to be set in the pipeline
+
+redis_client = redis.Redis(
+    host=redis_host + '.redis.cache.windows.net',
+    port=6380,
+    password=redis_password,
+    ssl=True
+)
+
+
+
 # Initialize OpenAI with the appropriate API key
 client = OpenAI(
-  organization='xxxxxxxxxxxxxxxxx',
+  organization=OPENAI_ORG_ID,
   api_key=OPENAI_API_KEY  # Use the environment variable here for security
 )
 
